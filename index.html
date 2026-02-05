@@ -1,0 +1,393 @@
+<script>
+const INITIAL_RECORDS = [
+  { from: '广州白云ZGGG/CAN', to: '台北桃园RCTP/TPE', aircraft: '南航B737-800', time: '2026-02-01', duration: '1:17', distanceKm: 854 },
+  { from: '上海浦东ZSPD/PVG', to: '洛杉矶KLAX/LAX', aircraft: '东航B777-300ER', time: '2026-02-02', duration: '14:41', distanceKm: 10541 },
+  { from: '广州白云ZGGG/CAN', to: '长沙黄花ZGHA/CSX', aircraft: '南航A321', time: '2026-02-03', duration: '0:56', distanceKm: 607 },
+  { from: '广州白云ZGGG/CAN', to: '北京大兴ZBAD/PKX', aircraft: '南航B787-9', time: '2026-02-03', duration: '2:43', distanceKm: 3875 },
+  { from: '北京大兴ZBAD/PKX', to: '长春龙嘉ZYCC/CGQ', aircraft: '南航A321', time: '2026-02-03', duration: '1:12', distanceKm: 961 },
+  { from: '北京首都ZBAA/PEK', to: '首尔仁川RKSI/ICN', aircraft: '国航B747-400', time: '2026-02-03', duration: '1:10', distanceKm: 938 },
+  { from: '香港VHHH/HKG', to: '成都双流ZUUU/CTU', aircraft: '南航A380', time: '2026-02-04', duration: '2:07', distanceKm: 1479 },
+  { from: '成都天府ZUTF/TFU', to: '拉萨贡嘎ZULS/LXA', aircraft: '藏航A319', time: '2026-02-05', duration: '1:50', distanceKm: 1397 },
+];
+</script>
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>aice - 个人主页</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg1:#3a8dff;
+      --bg2:#7b2cff;
+      --card:#ffffffcc;
+      --accent:#5ee0ff;
+      --muted:#6b7280;
+      --soft-shadow: 0 8px 30px rgba(44, 50, 63, 0.12);
+      --base-font: clamp(14px, 1.6vw, 16px);
+      --card-max-width: 100%; /* 无最大宽度限制，完全充满 */
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    html{height:100%;scroll-behavior:smooth;}
+    body{
+      margin:0;
+      font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      background: linear-gradient(135deg,var(--bg1), var(--bg2));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px clamp(12px, 2vw, 40px); /* 紫蓝边距：上下24px，左右12px-40px */
+      -webkit-font-smoothing:antialiased;
+      font-size:var(--base-font);
+      min-height:100vh;
+      transition: align-items 0.3s ease;
+    }
+    .card{
+      width:100%;
+      max-width:var(--card-max-width);
+      background:linear-gradient(180deg, rgba(255,255,255,0.94), rgba(255,255,255,0.9));
+      border-radius:clamp(12px, 2vw, 22px);
+      padding:clamp(16px, 3.2vw, 36px) clamp(20px, 4vw, 48px); /* 左右内边距加大，内容不贴边 */
+      box-shadow:var(--soft-shadow);
+      text-align:center;
+      color:#0f172a;
+      backdrop-filter: blur(6px);
+      max-height: calc(100vh - 48px); /* 高度留上下边距 */
+      overflow: hidden;
+      transition: max-height 0.3s ease, overflow 0.3s ease;
+    }
+    .avatar{
+      width:clamp(84px, 18vw, 140px);
+      height:clamp(84px, 18vw, 140px);
+      margin:0 auto clamp(12px, 2.4vw, 22px);
+      border-radius:50%;
+      display:flex;align-items:center;justify-content:center;
+      background:linear-gradient(180deg,#fff,#f3f7ff);
+      box-shadow: 0 6px 22px rgba(59,130,246,0.14), 0 0 0 clamp(4px, 0.9vw, 8px) #ffffff;
+      border:1px solid rgba(255,255,255,0.6);
+      position:relative;overflow:visible;
+    }
+    .name{font-size:clamp(20px, 4vw, 34px);font-weight:600;margin:6px 0;letter-spacing:0.6px;}
+    .tagline{font-size:clamp(12px,2.6vw,16px);color:var(--muted);margin-bottom:clamp(8px,1.6vw,20px);font-style:italic;}
+    .btn{
+      display:inline-flex;align-items:center;gap:8px;padding:clamp(8px,1.6vw,12px) clamp(10px,2.2vw,18px);border-radius:999px;background:linear-gradient(90deg,#7bdff6,#8c6cff);color:white;border:none;cursor:pointer;font-weight:600;box-shadow:0 6px 18px rgba(124,58,237,0.18);
+      transition:transform .18s ease, box-shadow .18s ease, opacity .18s ease;font-size:clamp(13px,1.6vw,15px);
+    }
+    .btn:active{transform:translateY(1px);}
+    .email-box{margin-top:clamp(8px,1.6vw,18px);display:flex;align-items:center;justify-content:center;gap:8px;opacity:0;transform:translateY(8px);transition:opacity .22s ease, transform .22s ease;flex-wrap:wrap;}
+    .email-box.show{opacity:1;transform:none;}
+    .email{
+      background:#f1f7ff;padding:clamp(6px,1.2vw,10px) clamp(10px,2.2vw,14px);border-radius:12px;color:#0b1220;font-weight:600;border:1px solid rgba(59,130,246,0.08);font-size:clamp(13px,1.6vw,15px);
+    }
+    .copy{background:transparent;border:none;color:#2563eb;cursor:pointer;}
+    .clouds{position:absolute;left:0;top:0;right:0;bottom:0;pointer-events:none;overflow:hidden;}
+    .cloud{position:absolute;filter:blur(28px);opacity:0.06;}
+    .log-btn{display:inline-flex;align-items:center;gap:10px;padding:clamp(8px,1.6vw,12px) clamp(10px,2.2vw,14px);border-radius:999px;background:linear-gradient(90deg,#ffd580,#ff9fcc);color:#0b1220;border:none;cursor:pointer;font-weight:600;box-shadow:0 6px 18px rgba(255,149,128,0.12);margin-left:clamp(8px,2vw,10px);font-size:clamp(13px,1.6vw,15px);}
+    .log-panel{margin-top:clamp(12px,3vw,16px);text-align:left;opacity:0;transform:translateY(8px);transition:max-height .28s ease, opacity .22s ease, transform .22s ease;pointer-events:none;display:block;max-height:0;overflow:hidden;}
+    .log-panel.show{opacity:1;transform:none;pointer-events:auto;max-height:70vh;overflow:auto;}
+    .log-card{background:#ffffff;padding:clamp(12px,2.4vw,20px);border-radius:clamp(8px,1.5vw,14px);border:1px solid rgba(11,17,34,0.04);box-shadow:var(--soft-shadow);margin:0 auto;}
+    @media (max-width:500px){
+      .search-row{flex-direction:column;align-items:stretch;gap:12px !important;}
+      .search-row input[type='date']{width:100%;}
+      .search-row > div:last-child{display:flex;flex-direction:column;gap:8px;}
+      .search-row > div:last-child .btn{width:100%;}
+    }
+    .log-form-grid{display:grid;grid-template-rows:auto auto auto;gap:8px;}
+    .log-form-grid .labels{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;align-items:center;}
+    .log-form-grid .field-label{text-align:left;font-weight:700;color:var(--muted);font-size:13px;}
+    .log-form-grid .inputs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+    .log-form-grid input{padding:8px;border-radius:8px;border:1px solid rgba(11,17,34,0.06);background:#fbfeff;}
+    @media (max-width:640px){ .log-form-grid .labels, .log-form-grid .inputs {grid-template-columns:repeat(2,1fr);} }
+    .record-list{margin-top:clamp(12px,2.4vw,16px);}
+    .record{display:grid;grid-template-columns:repeat(6,1fr);gap:clamp(6px,1.5vw,12px);align-items:center;padding:clamp(8px,2vw,14px);border-radius:clamp(8px,1.5vw,12px);background:linear-gradient(180deg,#f8fdff,#ffffff);border:1px solid rgba(59,130,246,0.06);transition:all .18s ease;font-size:clamp(12px,1.5vw,14px);text-align:center;}
+    .record.record-header{background:transparent;border:none;padding:clamp(6px,1.2vw,8px);font-weight:700;color:var(--muted);}
+    .record-header .route{display:flex;align-items:center;justify-content:center;}
+    .utc{font-size:clamp(10px,1vw,11px);color:var(--muted);font-weight:400;margin-left:4px;}
+    .record-row div{color:#0b1220;word-break:break-all;}
+    .record-row div:nth-child(1), .record-row div:nth-child(2){font-weight:700;color:#0b1220;}
+    .no-records{color:var(--muted);opacity:0.6;font-style:italic;text-align:center;padding:12px;border-radius:8px;font-size:13px;}
+    .search-row{display:flex;gap:clamp(6px,1.5vw,8px);align-items:center;margin-bottom:clamp(10px,2vw,16px);width:100%;}
+    .search-row input[type='date']{
+      padding:clamp(6px,1.5vw,8px);
+      border-radius:8px;
+      border:1px solid rgba(11,17,34,0.06);
+      background:#fbfeff;
+      flex:1;
+      min-width:120px;
+      font-size:clamp(12px,1.5vw,14px);
+      font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      color:#0b1220;
+    }
+    /* 日期输入框占位符样式 - 中文年/月/日 */
+    .search-row input[type='date']::-webkit-datetime-edit {
+      font-size:clamp(12px,1.5vw,14px);
+      color:#0b1220;
+    }
+    .search-row input[type='date']::-webkit-datetime-edit-text {
+      color:var(--muted);
+      padding:0 2px;
+    }
+    .search-row input[type='date']::-webkit-datetime-edit-month-field,
+    .search-row input[type='date']::-webkit-datetime-edit-day-field,
+    .search-row input[type='date']::-webkit-datetime-edit-year-field {
+      color:#0b1220;
+    }
+    .search-row input[type='date']::-webkit-calendar-picker-indicator {
+      filter: invert(0.8) brightness(0.8);
+      cursor:pointer;
+    }
+    @media (max-width:700px){
+      .record{grid-template-columns:repeat(2,1fr);gap:10px;padding:10px;}
+      .record.record-header{grid-template-columns:repeat(2,1fr);}
+      .record-row div{font-size:0.95rem;}
+    }
+    @media (max-width:420px){
+      .record{grid-template-columns:1fr;gap:8px;padding:8px;text-align:left;padding-left:12px;}
+      .record.record-header{display:none;}
+      .record-row div{font-size:0.95rem;padding:4px 0;}
+      body{padding:16px clamp(8px,2vw,20px);}
+      .card{max-height: calc(100vh - 32px);padding:clamp(16px, 3.2vw, 36px) clamp(16px, 3vw, 24px);}
+    }
+    body.log-open{align-items:flex-start;}
+    body.log-open .card{max-height: calc(100vh - 48px);overflow-y: auto;margin-top: 0;}
+    body.log-open .log-card{max-height:60vh;overflow:auto;}
+    .totals{display:flex;gap:clamp(8px,2vw,12px);align-items:center;justify-content:space-between;margin-top:clamp(12px,2.4vw,16px);flex-wrap:wrap;}
+    .totals .stat{flex:1;padding:clamp(8px,2vw,10px);border-radius:clamp(8px,1.5vw,10px);background:linear-gradient(180deg,#f9fbff,#ffffff);border:1px solid rgba(59,130,246,0.04);text-align:center;min-width:120px;}
+    .stat-label{font-size:clamp(12px,1.5vw,0.9rem);color:var(--muted);margin-bottom:6px;}
+    .stat-value{font-weight:700;font-size:clamp(13px,1.8vw,1.05rem);color:#0b1220;}
+    @media (max-width:640px){.totals{flex-direction:column;gap:8px;width:100%;}.totals .stat{width:100%;}}
+  </style>
+</head>
+<body>
+  <div class="clouds" aria-hidden="true">
+    <svg class="cloud" style="left: -10%; top: -5%; width: min(60vw,480px); height:auto;" viewBox="0 0 600 200" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 80 C60 10, 180 10, 240 80 C320 60, 420 100, 520 60 C580 36, 620 86, 680 76" stroke="#ffffff" stroke-width="120" stroke-linecap="round" opacity="0.9"/></svg>
+  </div>
+  <main class="card" role="main">
+    <div class="avatar" aria-hidden="true">
+      <img src="cat.png" alt="头像" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">
+    </div>
+    <h1 class="name">aice</h1>
+    <div class="tagline">天空没有极限</div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:10px;">
+      <!-- 日志栏目移到最前面 -->
+      <div>
+        <button id="logToggleBtn" class="log-btn" aria-expanded="false" aria-controls="flightLog">✈️ Aerofly FS 飞行日志</button>
+        <button id="contactBtn" class="btn" aria-expanded="false" aria-controls="emailBox">📩 联系我</button>
+      </div>
+      <div id="flightLog" class="log-panel" role="region" aria-live="polite" aria-label="飞行日志">
+        <div class="log-card">
+          <div class="search-row">
+            <div style="display:flex;align-items:center;gap:8px;flex:1">
+              <input type="date" id="filterDate" aria-label="按日期查找" placeholder="年/月/日">
+            </div>
+            <div style="display:flex;gap:8px">
+              <button id="filterBtn" class="btn">查找</button>
+              <button id="clearFilter" class="btn" style="background:linear-gradient(90deg,#f3f4f6,#e5e7eb);color:#0b1220">清除</button>
+            </div>
+          </div>
+          <div class="totals" aria-hidden="true">
+            <div class="stat">
+              <div class="stat-label">航班数</div>
+              <div id="totalCount" class="stat-value">0</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">总飞行时间</div>
+              <div id="totalTime" class="stat-value">00 m</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">总飞行距离</div>
+              <div id="totalDistance" class="stat-value">0 km</div>
+            </div>
+          </div>
+          <div id="records" class="record-list" aria-live="polite"></div>
+        </div>
+      </div>
+      <div id="emailBox" class="email-box" role="status" aria-live="polite">
+        <div class="email" id="emailText">3166618806@qq.com</div>
+        <button id="copyBtn" class="copy" title="复制邮箱">复制</button>
+      </div>
+    </div>
+  </main>
+  <script>
+    // 日志相关功能先加载
+    const logToggle = document.getElementById('logToggleBtn');
+    const logPanel = document.getElementById('flightLog');
+    const recordsEl = document.getElementById('records');
+    
+    function loadRecords(){
+      return (INITIAL_RECORDS && INITIAL_RECORDS.length) ? INITIAL_RECORDS.slice() : [];
+    }
+    function escapeHtml(s){ return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
+    function dateKey(v){
+      if(!v) return '';
+      const m = String(v).match(/^(\d{4}-\d{2}-\d{2})/);
+      if(m) return m[1];
+      try{
+        const d = new Date(v);
+        if(isNaN(d)) return '';
+        return d.toISOString().slice(0,10);
+      }catch(e){return ''}
+    }
+    function formatDateChineseFromKey(key){
+      if(!key) return '';
+      const m = String(key).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+      if(m) return `${m[1]}年${m[2]}月${m[3]}日`;
+      return key;
+    }
+    function formatTime(v){
+      if(!v) return '';
+      const m = String(v).match(/^(\d{4}-\d{2}-\d{2})/);
+      if(m) return formatDateChineseFromKey(m[1]);
+      try{
+        const d = new Date(v);
+        if(isNaN(d)) return escapeHtml(v);
+        const y = d.getFullYear();
+        const mm = String(d.getMonth()+1).padStart(2,'0');
+        const dd = String(d.getDate()).padStart(2,'0');
+        return `${y}年${mm}月${dd}日`;
+      }catch(e){return escapeHtml(v)}
+    }
+    let currentFilterDate = null;
+    function getFilteredRecords(){
+      const arr = loadRecords();
+      if(!currentFilterDate) return arr;
+      return arr.filter(r => {
+        const key = dateKey(r.time || r.date || '');
+        return key === currentFilterDate;
+      });
+    }
+    function formatDurationDisplay(minutes){
+      const m = Number(minutes) || 0;
+      const h = Math.floor(m / 60);
+      const mm = m % 60;
+      if(h === 0){
+        return `${String(mm).padStart(2,'0')} m`;
+      }
+      return `${h} h ${String(mm).padStart(2,'0')} m`;
+    }
+    function formatDistanceDisplay(v){
+      const km = parseDistanceKm(v || 0);
+      return `${km}${Number(km) === Math.round(km) ? '' : ''} km`;
+    }
+    function parseDurationToMinutes(v){
+      if(v == null || v === '') return 0;
+      if(typeof v === 'number' && !isNaN(v)) return Math.max(0, Math.floor(v));
+      const s = String(v).trim();
+        const m = s.match(/^(\d+):(\d{1,2})$/);
+      if(m){ return Number(m[1]) * 60 + Number(m[2]); }
+      const m2 = s.match(/^(\d+(?:\.\d+)?)\s*m(?:in)?$/i);
+      if(m2){ return Math.round(Number(m2[1])); }
+      if(!isNaN(Number(s))) return Math.round(Number(s));
+      return 0;
+    }
+    function parseDistanceKm(v){
+      if(v == null || v === '') return 0;
+      if(typeof v === 'number' && !isNaN(v)) return Number(v);
+      const s = String(v).trim();
+      const m = s.match(/^(\d+(?:\.\d+)?)\s*km$/i);
+      if(m) return Number(m[1]);
+      if(!isNaN(Number(s))) return Number(s);
+      return 0;
+    }
+    function formatTotalMinutes(minutes){
+      const h = Math.floor(minutes / 60);
+      const m = minutes % 60;
+      if(h === 0){
+        return `${String(m).padStart(2,'0')} m`;
+      }
+      return `${h} h ${String(m).padStart(2,'0')} m`;
+    }
+    function renderTotals(records){
+      const totalMinutes = (records || []).reduce((acc, r) => acc + parseDurationToMinutes(r.duration || r.durationMin || ''), 0);
+      const totalKm = (records || []).reduce((acc, r) => acc + parseDistanceKm(r.distanceKm || r.distance || ''), 0);
+      const count = (records || []).length;
+      const timeEl = document.getElementById('totalTime');
+      const distEl = document.getElementById('totalDistance');
+      const countEl = document.getElementById('totalCount');
+      if(timeEl) timeEl.textContent = formatTotalMinutes(totalMinutes);
+      if(distEl) distEl.textContent = `${totalKm.toFixed(1)} km`;
+      if(countEl) countEl.textContent = `${count}`;
+    }
+    function renderRecords(){
+      const arr = getFilteredRecords();
+      renderTotals(arr);
+      recordsEl.innerHTML = '';
+      if(!arr || arr.length === 0){
+        recordsEl.innerHTML = currentFilterDate ? '<div class="no-records">无飞行记录</div>' : '<div class="meta">暂无飞行记录</div>';
+        return;
+      }
+      const header = document.createElement('div');
+      header.className = 'record record-header';
+      header.innerHTML = `<div class="route">出发</div><div class="route">到达</div><div class="route">航司/执飞机型</div><div class="route">起飞日期<span class="utc">(UTC+8)</span></div><div class="route">飞行时间</div><div class="route">飞行距离</div>`;
+      recordsEl.appendChild(header);
+      arr.forEach((r) => {
+        const row = document.createElement('div');
+        row.className = 'record record-row';
+        row.innerHTML = `
+          <div>${escapeHtml(r.from)}</div>
+          <div>${escapeHtml(r.to)}</div>
+          <div>${escapeHtml(r.aircraft)}</div>
+          <div>${escapeHtml(formatTime(r.time || r.date || ''))}</div>
+          <div>${escapeHtml(formatDurationDisplay(parseDurationToMinutes(r.duration || r.durationMin || '')))}</div>
+          <div>${escapeHtml(formatDistanceDisplay(r.distanceKm || r.distance || ''))}</div>
+        `;
+        recordsEl.appendChild(row);
+      });
+    }
+    logToggle.addEventListener('click', () => {
+      const shown = logPanel.classList.toggle('show');
+      logToggle.setAttribute('aria-expanded', shown);
+      if(shown){
+        document.body.classList.add('log-open');
+        logPanel.scrollIntoView({behavior:'smooth', block:'start'});
+      } else {
+        document.body.classList.remove('log-open');
+        window.scrollTo({top:0, behavior:'smooth'});
+      }
+    });
+    const filterInput = document.getElementById('filterDate');
+    const filterBtn = document.getElementById('filterBtn');
+    const clearFilterBtn = document.getElementById('clearFilter');
+    filterBtn.addEventListener('click', () => {
+      const v = filterInput.value;
+      if(!v) return;
+      currentFilterDate = v;
+      renderRecords();
+    });
+    clearFilterBtn.addEventListener('click', () => {
+      currentFilterDate = null;
+      filterInput.value = '';
+      renderRecords();
+    });
+    filterInput.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter'){ e.preventDefault(); filterBtn.click(); }
+    });
+
+    // 联系我功能
+    const btn = document.getElementById('contactBtn');
+    const box = document.getElementById('emailBox');
+    const emailText = document.getElementById('emailText');
+    const copyBtn = document.getElementById('copyBtn');
+    btn.addEventListener('click', () => {
+      const shown = box.classList.toggle('show');
+      btn.setAttribute('aria-expanded', shown);
+      if (shown) { emailText.setAttribute('tabindex','0'); emailText.focus(); }
+      else { emailText.removeAttribute('tabindex'); btn.focus(); }
+    });
+    copyBtn.addEventListener('click', async () => {
+      try{
+        await navigator.clipboard.writeText(emailText.textContent.trim());
+        copyBtn.textContent = '已复制';
+        setTimeout(()=> copyBtn.textContent = '复制', 2200);
+      }catch(e){
+        copyBtn.textContent = '复制失败';
+        setTimeout(()=> copyBtn.textContent = '复制', 2200);
+      }
+    });
+
+    // 初始化渲染记录
+    renderRecords();
+  </script>
+</body>
+</html>
