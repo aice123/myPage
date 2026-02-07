@@ -48,7 +48,7 @@ const INITIAL_RECORDS = [
       transition: align-items 0.3s ease;
     }
     .card{
-      width:100% !important;
+      width:100%;
       max-width:var(--card-max-width);
       background:linear-gradient(180deg, rgba(255,255,255,0.94), rgba(255,255,255,0.9));
       border-radius:clamp(12px, 2vw, 22px);
@@ -58,7 +58,7 @@ const INITIAL_RECORDS = [
       color:#0f172a;
       backdrop-filter: blur(6px);
       max-height: calc(100vh - 48px); /* 高度留上下边距 */
-      overflow: visible !important;
+      overflow: auto;
       transition: max-height 0.3s ease, overflow 0.3s ease;
     }
     .avatar{
@@ -149,7 +149,7 @@ const INITIAL_RECORDS = [
     body.log-open{align-items:flex-start;}
     body.log-open .card{max-height: calc(100vh - 48px);overflow-y: auto;margin-top: 0;}
     body.log-open .log-card{max-height:60vh;overflow:auto;}
-    .totals{display:flex;gap:clamp(8px,2vw,12px);align-items:center;justify-content:space-between;margin-top:clamp(12px,2.4vw,16px);flex-wrap:nowrap !important;width:100%;}
+    .totals{display:flex;gap:clamp(8px,2vw,12px);align-items:center;justify-content:space-between;margin-top:clamp(12px,2.4vw,16px);flex-wrap:wrap;width:100%;}
     .totals .stat{flex:1;padding:clamp(8px,2vw,10px);border-radius:clamp(8px,1.5vw,10px);background:linear-gradient(180deg,#f9fbff,#ffffff);border:1px solid rgba(59,130,246,0.04);text-align:center;min-width:120px;}
     .stat-label{font-size:clamp(12px,1.5vw,0.9rem);color:var(--muted);margin-bottom:6px;}
     .stat-value{font-weight:700;font-size:clamp(13px,1.8vw,1.05rem);color:#0b1220;}
