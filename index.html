@@ -48,7 +48,7 @@ const INITIAL_RECORDS = [
       transition: align-items 0.3s ease;
     }
     .card{
-      width:100%;
+      width:100% !important;
       max-width:var(--card-max-width);
       background:linear-gradient(180deg, rgba(255,255,255,0.94), rgba(255,255,255,0.9));
       border-radius:clamp(12px, 2vw, 22px);
@@ -58,7 +58,7 @@ const INITIAL_RECORDS = [
       color:#0f172a;
       backdrop-filter: blur(6px);
       max-height: calc(100vh - 48px); /* 高度留上下边距 */
-      overflow: hidden;
+      overflow: visible !important;
       transition: max-height 0.3s ease, overflow 0.3s ease;
     }
     .avatar{
@@ -102,13 +102,13 @@ const INITIAL_RECORDS = [
     .log-form-grid .field-label{text-align:left;font-weight:700;color:var(--muted);font-size:13px;}
     .log-form-grid .inputs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
     .log-form-grid input{padding:8px;border-radius:8px;border:1px solid rgba(11,17,34,0.06);background:#fbfeff;}
-    @media (max-width:640px){ .log-form-grid .labels, .log-form-grid .inputs {grid-template-columns:repeat(2,auto);} }
+    @media (max-width:640px){ .log-form-grid .labels, .log-form-grid .inputs {grid-template-columns:repeat(2,1fr);} }
     .record-list{margin-top:clamp(12px,2.4vw,16px);}
     .record{display:grid;grid-template-columns:repeat(6,1fr);gap:clamp(6px,1.5vw,12px);align-items:center;padding:clamp(8px,2vw,14px);border-radius:clamp(8px,1.5vw,12px);background:linear-gradient(180deg,#f8fdff,#ffffff);border:1px solid rgba(59,130,246,0.06);transition:all .18s ease;font-size:clamp(12px,1.5vw,14px);text-align:left;}
     .record.record-header{background:transparent;border:none;padding:clamp(6px,1.2vw,8px);font-weight:700;color:var(--muted);}
     .record-header .route{display:flex;align-items:center;justify-content:flex-start;}
     .utc{font-size:clamp(10px,1vw,11px);color:var(--muted);font-weight:400;margin-left:4px;}
-    .record-row div{color:#0b1220;word-break:break-all !important;}
+    .record-row div{color:#0b1220;word-break:break-all;}
     .record-row div:nth-child(1), .record-row div:nth-child(2){font-weight:700;color:#0b1220;}
     .no-records{color:var(--muted);opacity:0.6;font-style:italic;text-align:center;padding:12px;border-radius:8px;font-size:13px;}
     .search-row{display:flex;gap:clamp(6px,1.5vw,8px);align-items:center;margin-bottom:clamp(10px,2vw,16px);width:100%;}
