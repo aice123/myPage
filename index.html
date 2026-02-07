@@ -1,15 +1,16 @@
 <script>
 const INITIAL_RECORDS = [
-  { from: '广州白云ZGGG/CAN', to: '台北桃园RCTP/TPE', aircraft: '南航B737-800', time: '2026-02-01', duration: '1:17', distanceKm: 854 },
-  { from: '上海浦东ZSPD/PVG', to: '洛杉矶KLAX/LAX', aircraft: '东航B777-300ER', time: '2026-02-02', duration: '14:41', distanceKm: 10541 },
-  { from: '广州白云ZGGG/CAN', to: '长沙黄花ZGHA/CSX', aircraft: '南航A321', time: '2026-02-03', duration: '0:56', distanceKm: 607 },
-  { from: '广州白云ZGGG/CAN', to: '北京大兴ZBAD/PKX', aircraft: '南航B787-9', time: '2026-02-03', duration: '2:43', distanceKm: 2334 },
-  { from: '北京大兴ZBAD/PKX', to: '长春龙嘉ZYCC/CGQ', aircraft: '南航A321', time: '2026-02-03', duration: '1:12', distanceKm: 961 },
-  { from: '北京首都ZBAA/PEK', to: '首尔仁川RKSI/ICN', aircraft: '国航B747-400', time: '2026-02-03', duration: '1:10', distanceKm: 938 },
-  { from: '香港VHHH/HKG', to: '成都双流ZUUU/CTU', aircraft: '南航A380', time: '2026-02-04', duration: '2:07', distanceKm: 1479 },
-  { from: '成都天府ZUTF/TFU', to: '拉萨贡嘎ZULS/LXA', aircraft: '西藏航空A319', time: '2026-02-05', duration: '1:50', distanceKm: 1397 },
+  { from: '广州白云ZGGG/CAN', to: '台北桃园RCTP/TPE', aircraft: '南航 B737-800', time: '2026-02-01', duration: '1:17', distanceKm: 854 },
+  { from: '上海浦东ZSPD/PVG', to: '洛杉矶KLAX/LAX', aircraft: '东航 B777-300ER', time: '2026-02-02', duration: '14:41', distanceKm: 10541 },
+  { from: '广州白云ZGGG/CAN', to: '长沙黄花ZGHA/CSX', aircraft: '南航 A321', time: '2026-02-03', duration: '0:56', distanceKm: 607 },
+  { from: '广州白云ZGGG/CAN', to: '北京大兴ZBAD/PKX', aircraft: '南航 B787-9', time: '2026-02-03', duration: '2:43', distanceKm: 2334 },
+  { from: '北京大兴ZBAD/PKX', to: '长春龙嘉ZYCC/CGQ', aircraft: '南航 A321', time: '2026-02-03', duration: '1:12', distanceKm: 961 },
+  { from: '北京首都ZBAA/PEK', to: '首尔仁川RKSI/ICN', aircraft: '国航 B747-400', time: '2026-02-03', duration: '1:10', distanceKm: 938 },
+  { from: '香港VHHH/HKG', to: '成都双流ZUUU/CTU', aircraft: '南航 A380', time: '2026-02-04', duration: '2:07', distanceKm: 1479 },
+  { from: '成都天府ZUTF/TFU', to: '拉萨贡嘎ZULS/LXA', aircraft: '西藏航空 A319', time: '2026-02-05', duration: '1:50', distanceKm: 1397 },
   { from: '洛杉矶KLAX/LAX', to: '旧金山KSFO/SFO', aircraft: 'Learjet 45', time: '2026-02-06', duration: '0:53', distanceKm: 600 },
-  { from: '旧金山KSFO/SFO', to: '纽约肯尼迪KJFK/JFK', aircraft: '阿拉斯加航空B737 MAX 9', time: '2026-02-06', duration: '5:08', distanceKm: 4211 }
+  { from: '旧金山KSFO/SFO', to: '纽约肯尼迪KJFK/JFK', aircraft: '阿拉斯加航空 B737 MAX 9', time: '2026-02-06', duration: '5:08', distanceKm: 4211 },
+  { from: '纽约肯尼迪KJFK/JFK', to: '伦敦希思罗EGLL/LHR', aircraft: '英航 B787-10', time: '2026-02-07', duration: '6:04', distanceKm: 5577 }
 ];
 </script>
 <!doctype html>
@@ -90,10 +91,10 @@ const INITIAL_RECORDS = [
     .log-panel.show{opacity:1;transform:none;pointer-events:auto;max-height:70vh;overflow:auto;}
     .log-card{background:#ffffff;padding:clamp(12px,2.4vw,20px);border-radius:clamp(8px,1.5vw,14px);border:1px solid rgba(11,17,34,0.04);box-shadow:var(--soft-shadow);margin:0 auto;}
     @media (max-width:500px){
-      .search-row{flex-direction:column;align-items:stretch;gap:12px !important;}
-      .search-row input[type='date']{width:100%;}
-      .search-row > div:last-child{display:flex;flex-direction:column;gap:8px;}
-      .search-row > div:last-child .btn{width:100%;}
+    /*所有设备下日期框+两个按钮都在同一行 */
+    .search-row{flex-wrap: nowrap;align-items: center;}
+    .search-row input[type='date']{min-width: 120px;flex: 1;}
+    .search-row > div:last-child{display:flex;gap:8px;flex-shrink: 0; }
     }
     .log-form-grid{display:grid;grid-template-rows:auto auto auto;gap:8px;}
     .log-form-grid .labels{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;align-items:center;}
@@ -102,9 +103,9 @@ const INITIAL_RECORDS = [
     .log-form-grid input{padding:8px;border-radius:8px;border:1px solid rgba(11,17,34,0.06);background:#fbfeff;}
     @media (max-width:640px){ .log-form-grid .labels, .log-form-grid .inputs {grid-template-columns:repeat(2,1fr);} }
     .record-list{margin-top:clamp(12px,2.4vw,16px);}
-    .record{display:grid;grid-template-columns:repeat(6,1fr);gap:clamp(6px,1.5vw,12px);align-items:center;padding:clamp(8px,2vw,14px);border-radius:clamp(8px,1.5vw,12px);background:linear-gradient(180deg,#f8fdff,#ffffff);border:1px solid rgba(59,130,246,0.06);transition:all .18s ease;font-size:clamp(12px,1.5vw,14px);text-align:center;}
+    .record{display:grid;grid-template-columns:repeat(6,1fr);gap:clamp(6px,1.5vw,12px);align-items:center;padding:clamp(8px,2vw,14px);border-radius:clamp(8px,1.5vw,12px);background:linear-gradient(180deg,#f8fdff,#ffffff);border:1px solid rgba(59,130,246,0.06);transition:all .18s ease;font-size:clamp(12px,1.5vw,14px);text-align:left;}
     .record.record-header{background:transparent;border:none;padding:clamp(6px,1.2vw,8px);font-weight:700;color:var(--muted);}
-    .record-header .route{display:flex;align-items:center;justify-content:center;}
+    .record-header .route{display:flex;align-items:center;justify-content:flex-start;}
     .utc{font-size:clamp(10px,1vw,11px);color:var(--muted);font-weight:400;margin-left:4px;}
     .record-row div{color:#0b1220;word-break:break-all;}
     .record-row div:nth-child(1), .record-row div:nth-child(2){font-weight:700;color:#0b1220;}
@@ -139,26 +140,18 @@ const INITIAL_RECORDS = [
       filter: invert(0.8) brightness(0.8);
       cursor:pointer;
     }
-    @media (max-width:700px){
+    @media (max-width:480px){
       .record{grid-template-columns:repeat(2,1fr);gap:10px;padding:10px;}
       .record.record-header{grid-template-columns:repeat(2,1fr);}
       .record-row div{font-size:0.95rem;}
     }
-    @media (max-width:420px){
-      .record{grid-template-columns:1fr;gap:8px;padding:8px;text-align:left;padding-left:12px;}
-      .record.record-header{display:none;}
-      .record-row div{font-size:0.95rem;padding:4px 0;}
-      body{padding:16px clamp(8px,2vw,20px);}
-      .card{max-height: calc(100vh - 32px);padding:clamp(16px, 3.2vw, 36px) clamp(16px, 3vw, 24px);}
-    }
     body.log-open{align-items:flex-start;}
     body.log-open .card{max-height: calc(100vh - 48px);overflow-y: auto;margin-top: 0;}
     body.log-open .log-card{max-height:60vh;overflow:auto;}
-    .totals{display:flex;gap:clamp(8px,2vw,12px);align-items:center;justify-content:space-between;margin-top:clamp(12px,2.4vw,16px);flex-wrap:wrap;}
+    .totals{display:flex;gap:clamp(8px,2vw,12px);align-items:center;justify-content:space-between;margin-top:clamp(12px,2.4vw,16px);flex-wrap:nowrap !important;width:100%;}
     .totals .stat{flex:1;padding:clamp(8px,2vw,10px);border-radius:clamp(8px,1.5vw,10px);background:linear-gradient(180deg,#f9fbff,#ffffff);border:1px solid rgba(59,130,246,0.04);text-align:center;min-width:120px;}
     .stat-label{font-size:clamp(12px,1.5vw,0.9rem);color:var(--muted);margin-bottom:6px;}
     .stat-value{font-weight:700;font-size:clamp(13px,1.8vw,1.05rem);color:#0b1220;}
-    @media (max-width:640px){.totals{flex-direction:column;gap:8px;width:100%;}.totals .stat{width:100%;}}
   </style>
 </head>
 <body>
